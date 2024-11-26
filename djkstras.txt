@@ -1,0 +1,96 @@
+import java.util.ArrayList;
+ import java.util.PriorityQueue;
+
+ public class Dijkstra {
+     static class Edge {
+         int src, dest, weight;
+
+         public Edge(int src, int dest, int weight) {
+             this.src = src;
+             this.dest = dest;
+             this.weight = weight;
+         }
+     }
+
+     static void createGraph(ArrayList<Edge>[] graph, int v) {
+         for (int i = 0; i < v; i++) {
+             graph[i] = new ArrayList<>();
+         }
+
+         graph[0].add(new Edge(0, 1, 2));
+         graph[1].add(new Edge(1, 0, 2));
+
+         graph[1].add(new Edge(1, 2, 8));
+         graph[2].add(new Edge(2, 1, 8));
+
+         graph[0].add(new Edge(0, 3, 3));
+         graph[3].add(new Edge(3, 0, 3));
+
+         graph[3].add(new Edge(3, 2, 4));
+         graph[2].add(new Edge(2, 3, 4));
+
+         graph[1].add(new Edge(1, 4, 5));
+         graph[4].add(new Edge(4, 1, 5));
+
+         graph[3].add(new Edge(3, 4, 7));
+         graph[4].add(new Edge(4, 3, 7));
+     }
+
+     static class Pair implements Comparable<Pair> {
+         int node, cost;
+
+         public Pair(int node, int cost) {
+             this.node = node;
+             this.cost = cost;
+         }
+         @Override
+         public int compareTo(Pair p2) {   
+             return this.cost - p2.cost;   
+         }
+     }
+
+     static void dijkstra(ArrayList<Edge>[] graph, int ver, int src){
+         PriorityQueue<Pair> pq = new PriorityQueue<>();
+         int[] cost = new int[ver];
+         boolean[] vis = new boolean[ver];
+
+         for (int i = 0; i < ver; i++){
+             cost[i] = Integer.MAX_VALUE;
+         }
+         cost[src] = 0;
+
+         pq.add(new Pair(src, 0));
+
+         while (!pq.isEmpty()) {
+             Pair curr = pq.remove();
+
+             if (!vis[curr.node]) {
+                 vis[curr.node] = true;
+
+                 for (int i = 0; i < graph[curr.node].size(); i++) {
+                     Edge e = graph[curr.node].get(i);
+                     int u = e.src;
+                     int v = e.dest;
+
+                     if (cost[u] + e.weight < cost[v]) {
+                         cost[v] = cost[u] + e.weight;
+                         pq.add(new Pair(v, cost[v]));
+                     }
+                 }
+             }
+         }
+
+          Print the shortest costances
+         System.out.println("Shortest costances from source " + src + ":");
+         for (int i = 0; i < ver; i++) {
+             System.out.println("Node " + i + " : " + cost[i]);
+         }
+     }
+
+     public static void main(String[] args){
+         int ver = 5;
+         ArrayList<Edge>[] graph = new ArrayList[v];
+         createGraph(graph, ver);
+         dijkstra(graph, ver, 0);
+     }
+ }
