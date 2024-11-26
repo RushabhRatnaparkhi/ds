@@ -1,0 +1,86 @@
+import java.util.*;
+
+
+
+public class Kruskal{
+    static class edge implements Comparable<edge>{
+        int src;
+        int dest;
+        int wt;
+        edge(int src,int dest,int wt){
+            this.src=src;
+            this.dest=dest;
+            this.wt=wt;
+        }
+        @Override
+
+        public int compareTo(edge e2){
+             return this.wt-e2.wt;
+        }
+    }
+
+    static void create(ArrayList<edge> graph){
+        graph.add(new edge(0, 1, 2));
+        graph.add(new edge(1, 2, 8));
+        graph.add(new edge(0, 3, 3));
+        graph.add(new edge(3, 2, 4));
+        graph.add(new edge(1, 4, 5));
+        graph.add(new edge(3, 4, 7));
+    }
+
+    static int find(int parent[],int node){
+        if(parent[node]==node) return node;
+        return parent[node]=find(parent,parent[node]);// path compression
+    }
+    static void union(int parent[],int rank[], int root1,int root2){
+          if(rank[root1]<rank[root2]){
+            parent[root1]=root2;
+
+          }
+          else if(rank[root1]>rank[root2]){
+         parent[root2]=root1;
+          }
+          else{
+              parent[root2]=root1;
+              rank[root1]++;
+          }
+    }
+
+
+    static void kruskalAlgo(ArrayList<edge> graph,int ver){
+         int parent[]=new int[ver];
+         int rank[]=new int[ver];
+         for(int i=0;i<ver;i++){
+            parent[i]=i;
+            rank[i]=0;
+         }
+
+         ArrayList<edge> mst=new ArrayList<>();
+         int mstCost=0;
+         
+         for(int i=0;i<graph.size();i++){
+            edge e=graph.get(i);
+            int root1=find(parent, e.src);
+            int root2=find(parent, e.dest);
+
+            while(root1!=root2){
+                mst.add(e);
+                mstCost+=e.wt;
+                union(parent, rank, root1, root2);
+             }
+         }
+            //print mst
+            System.out.println("printing mst");
+            for(int i=0;i<mst.size();i++){
+                edge e=mst.get(i);
+                System.out.println("src :"+e.src+" -----"+e.dest+"---weight---"+e.wt);
+            }
+            System.out.println("minimum spanning tree cost :-"+mstCost);
+         
+    }
+    public static void main(String[] args) {
+        int ver=5;
+        ArrayList<edge> graph=new ArrayList<>();
+
+    }
+}
