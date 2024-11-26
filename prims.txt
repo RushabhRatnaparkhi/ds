@@ -1,0 +1,93 @@
+ import java.util.ArrayList;
+ import java.util.PriorityQueue;
+ public class prims{
+
+  static class edge{
+     int src;
+     int dest;
+     int wt;
+     edge(int src, int dest,int wt){
+       this.src=src;
+       this.dest=dest;
+       this.wt=wt;
+     }
+   }
+
+   static void create(ArrayList<edge> graph[]){
+    for(int i=0;i<graph.length;i++)
+  {
+   graph[i]=new ArrayList<>();
+ } 
+ graph[0].add(new edge(0, 1, 3));
+ graph[1].add(new edge(1, 0, 3));
+
+ graph[0].add(new edge(0, 5, 10));
+ graph[5].add(new edge(5, 0, 10));
+
+ graph[1].add(new edge(1, 2, 6));
+ graph[2].add(new edge(2, 1, 6));
+
+ graph[1].add(new edge(1, 6, 2));
+ graph[6].add(new edge(6, 1, 2));
+
+ graph[2].add(new edge(2, 3, 9));
+ graph[3].add(new edge(3, 2, 9));
+
+ graph[2].add(new edge(2, 7, 4));
+ graph[7].add(new edge(7, 2, 4));
+
+ graph[3].add(new edge(3, 4, 1));
+ graph[4].add(new edge(4, 3, 1));
+
+ graph[4].add(new edge(4, 8, 7));
+ graph[8].add(new edge(8, 4, 7));
+
+ graph[5].add(new edge(5, 6, 8));
+ graph[6].add(new edge(6, 5, 8));
+
+ graph[7].add(new edge(7, 9, 5));
+ graph[9].add(new edge(9, 7, 5));
+
+ }
+ static class pair implements Comparable<pair> {
+   int node;
+   int cost;
+   pair(int node,int cost){
+        this.node=node;
+        this.cost=cost;
+   }
+   @Override 
+   public int compareTo(pair p2){
+       return this.cost-p2.cost;
+   }
+ }
+
+ static void primsalgo(ArrayList<edge> graph[],int ver){
+      PriorityQueue<pair> pq=new PriorityQueue<>();
+      boolean vis[]=new boolean[ver];
+      pq.add(new pair(0, 0));
+      int mstcost=0;
+
+      while(!pq.isEmpty()){
+            pair curr=pq.remove();
+            if(!vis[curr.node]){
+             vis[curr.node]=true;
+             mstcost+=curr.cost;
+             for(int i=0;i<graph[curr.node].size();i++){
+                      edge e=graph[curr.node].get(i);
+
+                      if(!vis[e.dest]){
+                        pq.add(new pair(e.dest, e.wt));
+                       }
+        }s
+       }
+      }
+      System.out.println("minimum spanning cost :"+mstcost);
+ }
+   public static void main(String[] args) {
+     int ver=10;
+     ArrayList<edge> graph[]=new ArrayList[ver];
+     create(graph);
+     primsalgo(graph, ver);
+   }
+ }
