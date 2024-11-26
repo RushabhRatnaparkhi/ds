@@ -1,0 +1,86 @@
+public class ThreadedBinaryTree{
+    static class Node{
+        int data;
+        Node left, right;
+        boolean isLeftThread,isRightThread;
+        Node(int data){
+       this.data=data;
+       this.isLeftThread=true;
+       this.isRightThread=true;
+        }
+    }
+
+    private Node root;
+    void insert(int data){
+          if(root==null){
+           root=new Node(data);
+           return;
+          }
+
+          Node parent=null;
+          Node current=root;
+          while(current!=null){
+              parent=current;
+              if(data<current.data){
+                if(current.isLeftThread) break;
+                   current=current.left;
+              }
+              else if(data > current.data){
+                  if(current.isRightThread) break;
+                    current=current.right;
+              }
+              else{
+                return;
+              }
+          }
+
+          Node newNode =new Node(data);
+          if(data<parent.data){
+            newNode.left=parent.left;
+            newNode.right=parent;
+            parent.isLeftThread=false;
+            parent.left=newNode;
+          }
+          else{
+            newNode.left=parent;
+            newNode.right=parent.right;
+            parent.isRightThread=false;
+            parent.right=newNode;
+          }
+    }
+    
+    void display(){
+        if(root==null){
+            System.out.println("tree is empty !!");
+            return;
+        }
+        Node current=root;
+        while(current!=null && !current.isLeftThread){
+            current=current.left;
+        }
+        while(current!=null){
+            System.out.print(current.data +" ");
+            if(current.isRightThread){
+                current=current.right;
+            }
+            else{
+                current=current.right;
+                while(current!=null && !current.isLeftThread){
+                    current=current.left;
+                }
+            }
+        }
+
+
+    }
+    public static void main(String[] args) {
+        ThreadedBinaryTree q1=new ThreadedBinaryTree();
+        q1.insert(12);
+        q1.insert(65);
+        q1.insert(85);
+        q1.insert(32);
+        q1.insert(10);
+        q1.insert(3);
+        q1.display();
+    } 
+}
