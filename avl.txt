@@ -1,0 +1,183 @@
+import java.util.*;
+class Contact{
+    String phone;
+    String name;
+    Contact(String name, String phone){
+         this.name=name;
+         this.phone=phone;
+    }
+}
+
+class Node{
+     Contact contact;
+     Node left,right;
+     Node(Contact contact){
+         this.contact=contact;
+     }
+}
+
+public class PhoneBookApplication{
+    private Node root;
+
+    public void insert(String name, String phone){
+         Contact newContact=new Contact(name,phone);
+         root=insert(root,newContact);
+         System.out.println("contact inserted successfully");
+    }
+    private Node insert(Node root, Contact contact){
+          if(root==null){
+            return new Node(contact);
+          }
+
+          if(contact.name.compareToIgnoreCase(root.contact.name)<0){
+              root.left=insert(root.left,contact);
+          }
+          else if(contact.name.compareToIgnoreCase(root.contact.name)>0){
+                root.right=insert(root.right,contact);
+          }
+          else{
+            System.out.println("contact already exists");
+          }
+          return root;
+    }
+
+
+    public void search(String name){
+        Node result=search(root,name);
+        if(result!=null){
+            System.out.println("name :"+ result.contact.name +" phone : "+result.contact.phone);
+        }
+        else{
+            System.out.println("contact not found ");
+        }
+    }
+
+    private Node search(Node root, String name){
+          if(root==null || name.equalsIgnoreCase(root.contact.name)){
+            return root;
+          }
+          if(name.compareToIgnoreCase(root.contact.name)<0){
+            return search(root.left,name);
+          }
+          else{
+            return search(root.right,name);
+          }
+    }
+
+    public void update(String name, String newPhone){
+           Node node=search(root,name);
+           if(node!=null){
+            node.contact.phone=newPhone;
+            System.out.println("contact updated successfully");
+           }
+           else{
+            System.out.println("no contact found");
+           }
+    }
+  void delete(String name){
+       root=delete(root,name);
+  }
+  private Node delete(Node root, String name){
+               if(root==null){
+                System.out.println("no contacts to delete");
+                return null;
+               }
+               
+               if(name.compareToIgnoreCase(root.contact.name)<0){
+                root.left=delete(root.left,name);
+               }
+               else if(name.compareToIgnoreCase(root.contact.name)>0){
+                root.right=delete(root.left, name);
+               }
+               else{
+                    
+                   if(root.left==null){
+                    System.out.println("contact deleted successfully !!");
+                    return root.right;
+                   }
+                   else if(root.right==null){
+                    System.out.println("contact deleted successfully !!");
+                    return root.left;
+                   }
+
+                   root.contact=findMin(root.right).contact;
+                   root.right=delete(root.right,name);
+               }
+               return root;
+  }
+
+  public Node findMin(Node root){
+            if(root.left!=null){
+                root=root.left;
+            }
+            return root;
+  }
+
+  void display(){
+    if(root==null){
+        System.out.println("no contacts to display");
+        
+    }
+    else{
+        System.out.println("contacts are :-");
+        inorder(root);
+    }
+  }
+
+  private void inorder(Node root){
+    if(root!=null){
+        inorder(root.left);
+        System.out.println(" name : "+root.contact.name +" phone : "+root.contact.phone);
+        inorder(root.right);
+    }
+  }
+
+    public static void main(String[] args) {
+         PhoneBookApplication q1=new PhoneBookApplication();
+         Scanner q2=new Scanner(System.in);
+         while(true){
+            System.out.println("----phone book ----");
+            System.out.println("1.add contact");
+            System.out.println("2.search");
+            System.out.println("3. update");
+            System.out.println("4. delete");
+            System.out.println("5. display");
+            System.out.println("6. exit");
+            System.out.println("enter choice");
+            int choice= q2.nextInt();
+            q2.nextLine();
+            switch(choice){
+                     case 1:
+                         System.out.println("enter name");
+                         String name=q2.nextLine();
+                         System.out.println("enter phone");
+                         String phone=q2.nextLine();
+                         q1.insert(name, phone);
+                         break;
+                     case 2:
+                         System.out.println("enter name to search");
+                         String searchname=q2.nextLine();
+                         q1.search(searchname);
+                         break;
+                    case 3:
+                          System.out.println("enter name");
+                          String upname=q2.nextLine();
+                          System.out.println("enter new phone number");
+                          String newph=q2.nextLine();
+                          q1.update(upname, newph);
+                          break;
+                     case 4:
+                          System.out.println("enter name to delete");
+                          String deleteName=q2.nextLine();
+                          q1.delete(deleteName);
+                          break;
+                     case 5:
+                         q1.display();
+                         break;
+                     case 6:
+                         System.out.println("exiting.."); 
+                         break;  
+            }
+         }
+    }
+}
